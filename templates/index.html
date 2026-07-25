@@ -175,11 +175,12 @@
         <div class="dial">
           <input id="rate" type="range" min="0" max="100" step="any" value="100" aria-label="Inference speed">
           <output id="rate-readout" for="rate">100 tok/s</output>
-        </div>
       </div>
-      <button type="button" id="infer" class="btn btn-main">Infer</button>
-      <button type="button" id="lorem" class="btn">Lorem</button>
-      <button type="button" id="clear" class="btn btn-quiet">Clear tape</button>
+      <div id="controls">
+          <button type="button" id="infer" class="btn btn-main">Infer</button>
+          <button type="button" id="lorem" class="btn">Lorem</button>
+          <button type="button" id="clear" class="btn btn-quiet">Clear tape</button>
+      </div>
     </div>
   </section>
 

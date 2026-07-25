@@ -29,6 +29,12 @@
   const MAX_CYCLE = 6000;
   const KV_SPEEDUP = 4;
 
+  /* ── speed dial (log scale: dial position 0-100 -> RATE_MIN-RATE_MAX tok/s) */
+  const RATE_MIN = 0.2;   // dial floor — slow enough to watch each light blink
+  const RATE_MAX = 100;   // dial ceiling
+  const dialToRate = (pos) =>
+    RATE_MIN * Math.pow(RATE_MAX / RATE_MIN, clamp(pos, 0, 100) / 100);
+
   /* ── elements ─────────────────────────────────────────────────── */
   const cells = $("#tape-cells");
   const spinL = $("#spin-l");
@@ -45,6 +51,7 @@
 
   const promptEl = $("#prompt");
   const rateEl = $("#rate");
+  const rateOut = $("#rate-readout");
   const inferBtn = $("#infer");
   const loremBtn = $("#lorem");
   const clearBtn = $("#clear");
@@ -282,7 +289,7 @@
     const cost = kvCost + inferCost;
     const costFinal = kvCost + total;
 
-    const target = clamp(Number(rateEl.value) || 100, 1, 500);
+    const target = dialToRate(Number(rateEl.value));
     const nominal = Math.max(MIN_NOMINAL, 1000 / target);
     const T = clamp(nominal * (cost / costFinal), MIN_CYCLE, MAX_CYCLE);
 
@@ -374,7 +381,7 @@
     inferBtn.classList.add("halting");
     loremBtn.disabled = clearBtn.disabled = true;
 
-    const target = clamp(Number(rateEl.value) || 100, 1, 500);
+    const target = dialToRate(Number(rateEl.value));
     notice(
       1000 / target < MIN_NOMINAL
         ? `${total} tokens to write. Above ~9 tok/s the linkage is the limit — watch the measured rate.`
@@ -599,28 +606,28 @@
     notice(`${s.length} characters loaded into the feed.`);
   }
 
-  function bumpRate(delta) {
-    rateEl.value = clamp((parseInt(rateEl.value, 10) || 100) + delta, 1, 500);
+  function updateRateReadout() {
+    const rate = dialToRate(Number(rateEl.value));
+    rateOut.textContent = `${rate < 10 ? rate.toFixed(1) : Math.round(rate)} tok/s`;
   }
 
   /* ══ BOOT ════════════════════════════════════════════════════════ */
   async function boot() {
     drawCells();
-    setPack(packL, PACK_FULL);
-    setPack(packR, HUB);
+    setPack(packL, HUB);
+    setPack(packR, PACK_FULL);
     requestAnimationFrame(frame);
 
     inferBtn.addEventListener("click", onInfer);
     loremBtn.addEventListener("click", onLorem);
     clearBtn.addEventListener("click", onClear);
-    $("#rate-up").addEventListener("click", () => bumpRate(1));
-    $("#rate-down").addEventListener("click", () => bumpRate(-1));
-    rateEl.addEventListener("change", () => bumpRate(0));
+    rateEl.addEventListener("input", updateRateReadout);
     promptEl.addEventListener("keydown", (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); onInfer(); }
     });
     window.addEventListener("resize", sizeCanvas);
     sizeCanvas();
+    updateRateReadout();
 
     try {
       const res = await fetch("/api/state");
