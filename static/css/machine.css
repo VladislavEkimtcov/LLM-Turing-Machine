@@ -239,7 +239,29 @@ body::after {
 }
 #prompt.emptying { opacity: 0.12; }
 
-.controls { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: fit-content;
+}
+
+#controls_btns {
+  display: flex;
+  gap: 12px;
+}
+
+.dial {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.dial input[type="range"] {
+  flex: 1;
+  min-width: 0;
+}
 
 .stepper { display: flex; height: 42px; }
 

@@ -10,7 +10,7 @@ pip install flask
 python app.py
 ```
 
-Then open <http://127.0.0.1:5000>. On first start the app creates six 0-byte MP3
+Then open <http://127.0.0.1:6180>. On first start the app creates six 0-byte MP3
 templates in the project root; drop real audio over them and reload.
 
 ## Using it

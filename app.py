@@ -2,7 +2,7 @@
 THE INFERENCE ENGINE
 A Turing-machine apparatus that reads its whole tape before writing one cell.
 
-Run:  python app.py     ->  http://127.0.0.1:5000
+Run:  python app.py     ->  http://127.0.0.1:6180
 """
 
 from __future__ import annotations
@@ -194,5 +194,5 @@ if __name__ == "__main__":
         print("Drop real MP3s over them to give the machine a voice.\n")
     live = [n for n, ok in sound_report().items() if ok]
     print(f"Audio: {len(live)}/{len(SOUND_FILES)} files carry sound.")
-    print("Apparatus online at http://127.0.0.1:5000\n")
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    print("Apparatus online at http://127.0.0.1:6180\n")
+    app.run(host="127.0.0.1", port=6180, debug=False)
