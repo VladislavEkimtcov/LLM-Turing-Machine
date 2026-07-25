@@ -52,6 +52,8 @@
   const promptEl = $("#prompt");
   const rateEl = $("#rate");
   const rateOut = $("#rate-readout");
+  const volumeEl = $("#volume");
+  const volumeOut = $("#volume-readout");
   const inferBtn = $("#infer");
   const loremBtn = $("#lorem");
   const clearBtn = $("#clear");
@@ -189,7 +191,7 @@
 
   /* ══ AUDIO ═══════════════════════════════════════════════════════ */
   const SOUND_NAMES = ["tape_forward", "tape_rewind", "head_down", "head_up", "head_read", "head_write"];
-  const audio = { live: {}, pools: {}, loops: {} };
+  const audio = { live: {}, pools: {}, loops: {}, masterVolume: 0.7 };
 
   function initAudio(report) {
     let liveCount = 0;
@@ -202,10 +204,12 @@
       audio.pools[name] = Array.from({ length: 3 }, () => {
         const a = new Audio(src);
         a.preload = "auto";
+        a.volume = audio.masterVolume;
         return a;
       });
       const loop = new Audio(src);
       loop.loop = true;
+      loop.volume = audio.masterVolume;
       audio.loops[name] = loop;
     });
     gAudio.textContent = `${liveCount} / 6 live`;
@@ -611,6 +615,19 @@
     rateOut.textContent = `${rate < 10 ? rate.toFixed(1) : Math.round(rate)} tok/s`;
   }
 
+  function updateVolumeReadout() {
+    const v = clamp(Number(volumeEl.value), 0, 100) / 100;
+    volumeOut.textContent = `${Math.round(v * 100)}%`;
+
+    audio.masterVolume = v;
+    SOUND_NAMES.forEach((name) => {
+      if (audio.pools[name]) audio.pools[name].forEach((a) => { a.volume = v; });
+      if (audio.loops[name]) audio.loops[name].volume = v;
+    });
+
+    try { localStorage.setItem("itm-volume", volumeEl.value); } catch (e) { /* ignore */ }
+  }
+
   /* ══ BOOT ════════════════════════════════════════════════════════ */
   async function boot() {
     drawCells();
@@ -622,12 +639,19 @@
     loremBtn.addEventListener("click", onLorem);
     clearBtn.addEventListener("click", onClear);
     rateEl.addEventListener("input", updateRateReadout);
+    volumeEl.addEventListener("input", updateVolumeReadout);
     promptEl.addEventListener("keydown", (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); onInfer(); }
     });
     window.addEventListener("resize", sizeCanvas);
     sizeCanvas();
     updateRateReadout();
+
+    try {
+      const saved = localStorage.getItem("itm-volume");
+      if (saved !== null) volumeEl.value = saved;
+    } catch (e) { /* ignore */ }
+    updateVolumeReadout();
 
     try {
       const res = await fetch("/api/state");

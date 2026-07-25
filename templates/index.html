@@ -170,12 +170,20 @@
     </div>
 
     <div class="controls">
+      <div class="volume">
+        <label class="legend" for="volume">Volume</label>
+        <div class="dial">
+              <input id="volume" type="range" min="0" max="100" step="any" value="70" aria-label="Global volume">
+            <output hidden id="volume-readout" for="volume">70%</output>
+        </div>
+      </div>
       <div class="rate">
         <label class="legend" for="rate">tok/s</label>
         <div class="dial">
               <input id="rate" type="range" min="0" max="100" step="any" value="100" aria-label="Inference speed">
             <output hidden id="rate-readout" for="rate">100 tok/s</output>
         </div>
+      </div>
         <div id="controls_btns">
             <button type="button" id="infer" class="btn btn-main">Infer</button>
             <button type="button" id="lorem" class="btn">Lorem</button>
