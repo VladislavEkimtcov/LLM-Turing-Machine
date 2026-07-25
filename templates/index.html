@@ -36,6 +36,14 @@
         <stop offset="0" stop-color="#ff9a4a" stop-opacity="0.85"/>
         <stop offset="1" stop-color="#ff9a4a" stop-opacity="0"/>
       </radialGradient>
+      <clipPath id="mask-clip">
+        <rect x="60" y="170" width="1080" height="300" rx="16"/>
+      </clipPath>
+      <linearGradient id="mask-face" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3a4440"/>
+        <stop offset="0.5" stop-color="#2c3532"/>
+        <stop offset="1" stop-color="#1f2624"/>
+      </linearGradient>
     </defs>
 
     <!-- bus bar, top centre of the page -->
@@ -141,6 +149,19 @@
       <rect id="head-slit" x="576" y="220" width="48" height="5" rx="2"/>
       <text class="head-mark" x="600" y="204">R/W</text>
     </g>
+
+    <!-- mask door: lowers to hide the reels (and most of the head) behind a windowed faceplate -->
+    <g clip-path="url(#mask-clip)">
+      <g id="mask-door" class="mask-door">
+        <path class="mask-panel" fill="url(#mask-face)" fill-rule="evenodd"
+              d="M76,170 H1124 V470 H76 Z M335,220 H865 V272 H335 Z"/>
+        <rect class="mask-glass" x="335" y="220" width="530" height="52"/>
+        <rect class="mask-glass-sheen" x="335" y="220" width="530" height="9"/>
+        <text class="plate-mark" x="600" y="316" text-anchor="middle">◁AUTO_REVERSE▷</text>
+        <text class="plate-mark" x="600" y="342" text-anchor="middle">DUAL-USE HEAD</text>
+        <text class="plate-mark" x="600" y="360" text-anchor="middle">2 MOTOR TAPE MECHANISM</text>
+      </g>
+    </g>
   </svg>
 
   <!-- ══ STATUS LAMPS ═══════════════════════════════════════════════ -->
@@ -188,6 +209,7 @@
             <button type="button" id="infer" class="btn btn-main">Infer</button>
             <button type="button" id="lorem" class="btn">Lorem</button>
             <button type="button" id="clear" class="btn btn-quiet">Clear tape</button>
+            <button type="button" id="mask" class="btn btn-quiet" aria-pressed="false">Mask</button>
         </div>
     </div>
   </section>

@@ -48,6 +48,7 @@
   const head = $("#head");
   const slit = $("#head-slit");
   const headGlow = $("#head-glow");
+  const maskDoor = $("#mask-door");
 
   const promptEl = $("#prompt");
   const rateEl = $("#rate");
@@ -57,6 +58,7 @@
   const inferBtn = $("#infer");
   const loremBtn = $("#lorem");
   const clearBtn = $("#clear");
+  const maskBtn = $("#mask");
   const noticeEl = $("#notice");
   const printout = $("#printout");
   const emptyEl = $("#empty");
@@ -73,7 +75,7 @@
   const state = {
     tapeX: 0, lastX: 0, maxX: TRAVEL_MAX,
     angL: 0, angR: 0, angRoll: 0,
-    running: false, abort: false,
+    running: false, abort: false, masked: false,
     kvTokens: 0, printed: 0,
     seamAngles: [22, 205],
   };
@@ -600,6 +602,13 @@
     notice("Tape wiped. The next run starts with nothing behind it.");
   }
 
+  function onMask() {
+    state.masked = !state.masked;
+    maskDoor.classList.toggle("down", state.masked);
+    maskBtn.textContent = state.masked ? "Unmask" : "Mask";
+    maskBtn.setAttribute("aria-pressed", String(state.masked));
+  }
+
   const LOREM = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.`;
 
   function onLorem() {
@@ -638,6 +647,7 @@
     inferBtn.addEventListener("click", onInfer);
     loremBtn.addEventListener("click", onLorem);
     clearBtn.addEventListener("click", onClear);
+    maskBtn.addEventListener("click", onMask);
     rateEl.addEventListener("input", updateRateReadout);
     volumeEl.addEventListener("input", updateVolumeReadout);
     promptEl.addEventListener("keydown", (e) => {

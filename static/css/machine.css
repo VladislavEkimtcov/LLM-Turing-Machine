@@ -127,6 +127,33 @@ body::after {
 #head-slit.live { fill: var(--verdigris); }
 #head-slit.writing { fill: var(--molten); }
 
+/* ── MASK DOOR ──────────────────────────────────────────────── */
+.mask-door {
+  transform: translateY(-310px);
+  transition: transform 640ms cubic-bezier(0.4, 0.05, 0.25, 1);
+}
+.mask-door.down { transform: translateY(0); }
+
+.mask-panel {
+  stroke: #3a443f;
+  stroke-width: 2;
+}
+
+.mask-glass {
+  fill: rgba(180, 225, 214, 0.1);
+  stroke: rgba(180, 225, 214, 0.32);
+  stroke-width: 1;
+  transition: fill 640ms linear;
+}
+.mask-door.down .mask-glass { fill: rgba(180, 225, 214, 0.16); }
+
+.mask-glass-sheen {
+  fill: rgba(255, 255, 255, 0.16);
+  pointer-events: none;
+}
+
+#mask[aria-pressed="true"] { color: var(--verdigris); border-color: #3a5a54; }
+
 /* ── LAMP PANEL ─────────────────────────────────────────────── */
 .panel {
   max-width: 1200px;
@@ -482,4 +509,5 @@ body::after {
   .tok.hot { animation-duration: 1ms; }
   .kv-block.chilling { animation: none; }
   .btn:active { transform: none; }
+  .mask-door { transition-duration: 1ms; }
 }
