@@ -322,16 +322,17 @@
     play("head_read");
     loopOn("tape_forward");
 
+    if (kvTokens > 0 || i > 0) led("kv", true);
+
     if (tKv > 0) {
-      led("kv", true);
       await moveTape(kvDist, tKv);
-      led("kv", false);
       if (state.abort) return;
     }
 
     led("infer", true);
     await moveTape(kvDist + inferDist, tInfer);
     led("infer", false);
+    led("kv", false);
     loopOff("tape_forward");
     slit.classList.remove("live");
     led("read", false);
